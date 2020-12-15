@@ -34,5 +34,19 @@ jobs:
     - name: Upload database
       uses: actions/upload-artifact@v2
       with:
-        name: database
+        name: prices.sqlite3
         path: data/prices.sqlite3
+
+  upload:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+    - name: Set up mega
+      run: sudo apt install megatools
+    - name: Download artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: prices.sqlite3
+        path: /tmp
+    - name: Debug
+      run: !ls /tmp
