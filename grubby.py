@@ -147,4 +147,3 @@ if __name__ == "__main__":
     coins = [s['symbol'] for s in request(requests.get, GET_TICKER_PRICE)]
     for c in coins:
         populate(c)
-        break
