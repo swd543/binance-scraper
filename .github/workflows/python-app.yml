@@ -12,7 +12,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
     - uses: actions/checkout@v2
@@ -22,8 +22,10 @@ jobs:
         python-version: 3.8
     - name: Set up mega
       run: sudo apt install megatools
+    - name: Set up mega(2)
+      run: sudo echo "deb https://mega.nz/linux/MEGAsync/xUbuntu_20.04/ ./" | sudo tee -a /etc/apt/sources.list.d/mega-nz.list && sudo curl -fsSL https://mega.nz/keys/MEGA_signing.key | sudo apt-key add - && sudo apt update && sudo apt install megacmd
     - name: Sync sqlite
-      run: mkdir data && cd data && megadl https://mega.nz/#!bVxGUCSD!OTLGvj4SKbvqv4a31_xQbasSvLsMBJ-GcbYODt6a2ZQ && xz -d prices.sqlite3.xz
+      run: mkdir data && cd data && mega-get prices.sqlite3.xz && xz -d prices.sqlite3.xz
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
