@@ -49,4 +49,4 @@ jobs:
         name: prices.sqlite3
         path: /tmp
     - name: Upload
-      run: mega-login ${{secrets.USERNAME}} ${{secrets.PASSWORD}} && cd /tmp && xz prices.sqlite3 && mega-put prices.sqlite3.xz .
+      run: mega-login ${{secrets.USERNAME}} ${{secrets.PASSWORD}} && cd /tmp && xz prices.sqlite3 && mega-put prices.sqlite3.xz . && mega-deleteversions -f prices.sqlite3.xz
