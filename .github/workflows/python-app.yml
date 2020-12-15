@@ -49,4 +49,4 @@ jobs:
         name: prices.sqlite3
         path: /tmp
     - name: Debug
-      run: !ls /tmp
+      run: ls /tmp
