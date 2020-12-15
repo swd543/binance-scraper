@@ -42,7 +42,7 @@ jobs:
     needs: [build]
     steps:
     - name: Set up mega
-      run: echo "deb https://mega.nz/linux/MEGAsync/xUbuntu_20.04/ ./" | sudo tee -a /etc/apt/sources.list.d/mega-nz.list && curl -fsSL https://mega.nz/keys/MEGA_signing.key | sudo apt-key add - && apt update && sudo apt install megacmd
+      run: sudo echo "deb https://mega.nz/linux/MEGAsync/xUbuntu_20.04/ ./" | sudo tee -a /etc/apt/sources.list.d/mega-nz.list && sudo curl -fsSL https://mega.nz/keys/MEGA_signing.key | sudo apt-key add - && sudo apt update && sudo apt install megacmd
     - name: Set up mega
       run: mega-help
     - name: Download artifact
