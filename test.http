@@ -1,0 +1,10 @@
+@host = http://api.binance.com
+
+GET {{host}}/api/v3/klines
+  ?symbol=BTCEUR
+  &limit=1000
+  &interval=12h
+  &startTime={{$timestamp - 300 d}}
+  &endTime={{$timestamp - 200 d}}
+
+
