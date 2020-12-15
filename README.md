@@ -1,1 +1,1 @@
-https://github.com/swd543/binance-scraper/workflows/.github/workflows/python-app.yml/badge.svg
+https://github.com/swd543/binance-scraper/workflows/Python%20application/badge.svg
