@@ -23,7 +23,7 @@ jobs:
     - name: Set up mega
       run: sudo apt install megatools
     - name: Sync sqlite
-      run: mkdir data && cd data && megadl https://mega.nz/#!3NgEgYKC!A6FhXxa2yyyeJbOOg7CcWHZKDAlC1ULzAAAAAAAAAAA && ls
+      run: mkdir data && cd data && megadl https://mega.nz/#!bVxGUCSD!OTLGvj4SKbvqv4a31_xQbasSvLsMBJ-GcbYODt6a2ZQ && xz -d prices.sqlite3.xz
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -43,12 +43,10 @@ jobs:
     steps:
     - name: Set up mega
       run: sudo echo "deb https://mega.nz/linux/MEGAsync/xUbuntu_20.04/ ./" | sudo tee -a /etc/apt/sources.list.d/mega-nz.list && sudo curl -fsSL https://mega.nz/keys/MEGA_signing.key | sudo apt-key add - && sudo apt update && sudo apt install megacmd
-    - name: Set up mega
-      run: mega-help
     - name: Download artifact
       uses: actions/download-artifact@v2
       with:
         name: prices.sqlite3
         path: /tmp
-    - name: Debug
-      run: ls /tmp
+    - name: Upload
+      run: mega-login ${{secrets.USERNAME}} ${{secrets.PASSWORD}} && cd /tmp && xz prices.sqlite3 && mega-put prices.sqlite3.xz .
