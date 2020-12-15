@@ -23,7 +23,7 @@ jobs:
     - name: Set up mega
       run: sudo apt install megatools
     - name: Sync sqlite
-      run: mkdir data && cd data && megadl https://mega.nz/#!3NgEgYKC#A6FhXxa2yyyeJbOOg7CcWHZKDAlC1ULzAAAAAAAAAAA && ls
+      run: mkdir data && cd data && megadl https://mega.nz/#!3NgEgYKC!A6FhXxa2yyyeJbOOg7CcWHZKDAlC1ULzAAAAAAAAAAA && ls
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
