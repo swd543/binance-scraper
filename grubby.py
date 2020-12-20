@@ -83,8 +83,9 @@ def save_to_table(symbol, data: pd.DataFrame):
                 f'CREATE INDEX "ix_{symbol}_open_time"ON "{symbol}" ("open_time");')
             connex.cursor().execute(
                 f'CREATE INDEX "ix_{symbol}_close_time"ON "{symbol}" ("close_time");')
+            print(f'Created new table for {symbol}')
         except sqlite3.dbapi2.OperationalError as e:
-            print(e)
+            pass
 
         def insert(data, connex):
             data = data.copy(deep=False)
@@ -101,16 +102,20 @@ def save_to_table(symbol, data: pd.DataFrame):
             insert(data, connex)
             return
 
-        previous_time_delta = get_time_delta(previous)
-        current_time_delta = get_time_delta(data)
-        xdelta = (previous['open_time'].head(1)[0] -
-                  data['open_time'].tail(1)[0]) % previous_time_delta
-        # If time period matches with previous and if difference between datasets is a multiple of the difference between open_times of consecutive rows
-        if previous_time_delta == current_time_delta and xdelta.days == 0 or previous.empty:
+        try:
+            previous_time_delta = get_time_delta(previous)
+            current_time_delta = get_time_delta(data)
+            xdelta = (previous['open_time'].head(1)[0] -
+                    data['open_time'].tail(1)[0]) % previous_time_delta
+            # If time period matches with previous and if difference between datasets is a multiple of the difference between open_times of consecutive rows
+            if previous_time_delta == current_time_delta and xdelta.days == 0 or previous.empty:
+                insert(data, connex)
+            else:
+                raise ValueError(
+                    f'Unmatched time period with previous data ({previous_time_delta} vs {current_time_delta}), cannot save!')
+        # In the case where only one datapoint exists and delta cannot be calculated
+        except IndexError as e:
             insert(data, connex)
-        else:
-            raise ValueError(
-                f'Unmatched time period with previous data ({previous_time_delta} vs {current_time_delta}), cannot save!')
 
 
 def datetime64_to_epoch(dt64):
