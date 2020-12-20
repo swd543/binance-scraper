@@ -136,6 +136,7 @@ def populate(symbol):
     interval = int(3.6e+6 * 4 * 1000)
 
     while True:
+        print(data_exists(symbol, int(end-interval), end),'points found')
         if data_exists(symbol, int(end-interval), end) == 1000:
             end = end - interval
             continue
