@@ -49,7 +49,7 @@ class DatabaseHandler(object):
     def get_latest_datapoints_from_table(self, symbol, limit=10):
         with sqlite3.connect(self.database) as connex:
             return pd.read_sql_query(
-                f"SELECT * from {symbol} order by open_time desc {'' if limit is None else f' LIMIT {limit}'}", connex, parse_dates=['open_time', 'close_time'])
+                f"SELECT * from \"{symbol}\" order by open_time desc {'' if limit is None else f' LIMIT {limit}'}", connex, parse_dates=['open_time', 'close_time'])
 
     def get_latest_close_time(self, symbol):
         return DatabaseHandler.datetime64_to_epoch(self.get_latest_datapoints_from_table(symbol, 1)['close_time'][0])
@@ -60,7 +60,7 @@ class DatabaseHandler(object):
     def push_datapoints_to_table(self, symbol, data: pd.DataFrame):
         with sqlite3.connect(self.database) as connex:
             data = data.copy(deep=False)
-            query = f"INSERT OR IGNORE INTO {symbol}({','.join(types.keys())}) values ({','.join(['?' for _ in types.keys()])})"
+            query = f"INSERT OR IGNORE INTO \"{symbol}\"({','.join(types.keys())}) values ({','.join(['?' for _ in types.keys()])})"
             data['open_time'] = data['open_time'].astype('str')
             data['close_time'] = data['close_time'].astype('str')
             connex.cursor().executemany(query, data.to_records(False))
@@ -136,7 +136,7 @@ async def main():
             coins = [s['symbol'] for s in await _r.json()]
             print(f'{len(coins)} coins found, querying all!')
             fetcher = BinanceFetcher()
-            dbhandler = DatabaseHandler('prices.sqlite3')
+            dbhandler = DatabaseHandler('data/prices.sqlite3')
             await asyncio.gather(*[query_and_put_in_db(fetcher, dbhandler, session, coin) for coin in coins])
 
 if __name__ == "__main__":
