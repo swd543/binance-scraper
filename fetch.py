@@ -75,7 +75,7 @@ class BinanceFetcher(object):
         self.server_time = None
 
     async def get_historical(self, session, symbol, begin=None, end=None, interval='6h'):
-        params = {'symbol': symbol, 'interval': interval, 'limit': 0}
+        params = {'symbol': symbol, 'interval': interval, 'limit': 1000}
         if begin is not None:
             params['startTime'] = begin
         if end is not None:
@@ -136,7 +136,7 @@ async def main():
             coins = [s['symbol'] for s in await _r.json()]
             print(f'{len(coins)} coins found, querying all!')
             fetcher = BinanceFetcher()
-            dbhandler = DatabaseHandler('data/prices.sqlite3')
+            dbhandler = DatabaseHandler('prices.sqlite3')
             await asyncio.gather(*[query_and_put_in_db(fetcher, dbhandler, session, coin) for coin in coins])
 
 if __name__ == "__main__":
