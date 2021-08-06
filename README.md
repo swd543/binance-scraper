@@ -1,3 +1,3 @@
-https://github.com/swd543/binance-scraper/workflows/Python%20application/badge.svg
+![Scrape](https://github.com/github/docs/actions/workflows/python-app.yml/badge.svg)
 
 Test
