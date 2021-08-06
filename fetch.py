@@ -80,15 +80,13 @@ class BinanceFetcher(object):
             params['startTime'] = begin
         if end is not None:
             params['endTime'] = end
-        print(params)
+        print(params, end='-->')
         async with await session.get(GET_KLINES, params=params) as response:
             historical = await response.json()
             historical = convert_to_appropriate_datatypes(
                 pd.DataFrame(historical, columns=types.keys()))
+            print(len(historical))
             return historical
-
-    async def get_all_historical(self, session, symbol, begin=None, end=None, interval='6h'):
-        pass
 
     async def get_server_time(self, session):
         async with await session.get(GET_SERVER_TIME) as response:
@@ -125,7 +123,8 @@ async def query_and_put_in_db(fetcher: BinanceFetcher, dbhandler: DatabaseHandle
                 databasetime = DatabaseHandler.datetime64_to_epoch(
                     data.tail(1)['close_time'][0])
             except IndexError as e:
-                print(f"Server has no data for {coin} anymore.", e)
+                print(
+                    f"Server has no data for {coin} anymore after {databasetime}.", e)
                 break
             dbhandler.push_datapoints_to_table(coin, data)
 
@@ -133,7 +132,7 @@ async def query_and_put_in_db(fetcher: BinanceFetcher, dbhandler: DatabaseHandle
 async def main():
     async with aiohttp.ClientSession() as session:
         async with session.get(GET_TICKER_PRICE) as _r:
-            coins = [s['symbol'] for s in await _r.json()]
+            coins = sorted([s['symbol'].strip() for s in await _r.json()])
             print(f'{len(coins)} coins found, querying all!')
             fetcher = BinanceFetcher()
             dbhandler = DatabaseHandler('data/prices.sqlite3')
