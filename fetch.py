@@ -80,12 +80,11 @@ class BinanceFetcher(object):
             params['startTime'] = begin
         if end is not None:
             params['endTime'] = end
-        print(params, end='-->')
         async with await session.get(GET_KLINES, params=params) as response:
             historical = await response.json()
             historical = convert_to_appropriate_datatypes(
                 pd.DataFrame(historical, columns=types.keys()))
-            print(len(historical))
+            print(params, '-->', len(historical))
             return historical
 
     async def get_server_time(self, session):
