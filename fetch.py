@@ -129,8 +129,8 @@ async def main():
         async with session.get(GET_TICKER_PRICE) as _r:
             coins = [s['symbol'] for s in await _r.json()]
             print(f'{len(coins)} coins found, querying all!')
-            fetcher = BinanceFetcher('data/prices.sqlite3')
-            dbhandler = DatabaseHandler()
+            fetcher = BinanceFetcher()
+            dbhandler = DatabaseHandler('data/prices.sqlite3')
             await asyncio.gather(*[query_and_put_in_db(fetcher, dbhandler, session, coin) for coin in coins])
 
 if __name__ == "__main__":
