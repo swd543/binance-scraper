@@ -72,6 +72,7 @@ class BinanceFetcher(object):
 
     def __init__(self):
         super(BinanceFetcher, self).__init__()
+        self.server_time = None
 
     async def get_historical(self, session, symbol, begin=None, end=None, interval='6h'):
         params = {'symbol': symbol, 'interval': interval, 'limit': 0}
@@ -92,7 +93,12 @@ class BinanceFetcher(object):
     async def get_server_time(self, session):
         async with await session.get(GET_SERVER_TIME) as response:
             time = await response.json()
-            return time['serverTime']
+            try:
+                servertime = time['serverTime']
+                self.server_time = servertime
+                return servertime
+            except KeyError as e:
+                return self.server_time
 
 
 def convert_to_appropriate_datatypes(d: Dict[str, Tuple]):
