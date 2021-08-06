@@ -21,7 +21,7 @@ jobs:
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: 3
     - name: Set up mega
       run: sudo echo "deb https://mega.nz/linux/MEGAsync/xUbuntu_20.04/ ./" | sudo tee -a /etc/apt/sources.list.d/mega-nz.list && sudo curl -fsSL https://mega.nz/keys/MEGA_signing.key | sudo apt-key add - && sudo apt update && sudo apt install megacmd
     - name: Sync sqlite
@@ -32,7 +32,7 @@ jobs:
         pip install flake8 pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Run the app
-      run: python3 grubby.py
+      run: python3 fetch.py
     - name: Upload database
       uses: actions/upload-artifact@v2
       with:
