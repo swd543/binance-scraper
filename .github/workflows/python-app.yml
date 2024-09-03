@@ -46,7 +46,7 @@ jobs:
     - name: Set up mega
       run: sudo echo "deb https://mega.nz/linux/MEGAsync/xUbuntu_20.04/ ./" | sudo tee -a /etc/apt/sources.list.d/mega-nz.list && sudo curl -fsSL https://mega.nz/keys/MEGA_signing.key | sudo apt-key add - && sudo apt update && sudo apt install megacmd
     - name: Download artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4.1.7
       with:
         name: prices.sqlite3
         path: /tmp
